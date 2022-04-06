@@ -1,0 +1,26 @@
+.attendance-list-field {
+    width: 100%;
+}
+.attendance-list {
+    width: 85%;
+    margin: 50px auto;
+}
+.table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+.table-row {
+    border-top: solid 1px black;
+}
+.table-head-ttl,
+.table-item {
+    text-align: center;
+    width: 20%;
+    padding: 20px 0;
+}
+svg.w-5.h-5 {
+    /*paginateメソッドの矢印の大きさ調整のために追加*/
+    width: 30px;
+    height: 30px;
+}

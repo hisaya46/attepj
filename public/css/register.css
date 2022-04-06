@@ -1,0 +1,79 @@
+html {
+    height: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f1f1f1;
+}
+.header {
+    height: 80px;
+    width: 100%;
+    background-color: white;
+}
+.logo {
+    line-height: 80px;
+    font-size: 30px;
+    margin-left: 100px;
+}
+.footer {
+    position: sticky;
+    top: 100vh;
+    width: 100%;
+    height: 40px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    background-color: white;
+}
+
+.register-field {
+    width: 100%;
+}
+
+.register-field-content {
+    width: 30%;
+    margin: 50px auto;
+}
+.register-field-ttl {
+    text-align: center;
+}
+
+.register-field-lists {
+    display: block;
+    margin: 0 auto;
+}
+.register-field-list {
+    list-style-type: none;
+    margin-top: 30px;
+}
+.register-item {
+    width: 100%;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 12px;
+    border: solid 2px #b7b7b7;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #f1f1f1;
+}
+.register-btn {
+    background-color: #2525e0;
+    color: white;
+    border: none;
+}
+.register-field-login {
+    margin: 20px 0;
+    text-align: center;
+    font-size: 80%;
+}
+.register-field-login-message {
+    color: gray;
+    margin-bottom: 5px;
+}
+.register-field-login-btn {
+    text-decoration: none;
+    color: #2525e0;
+}
