@@ -14,8 +14,25 @@ class AttendanceController extends Controller
     //打刻ページ表示
     public function getIndex()
     {
-        return view('index');
+        return view('index.index');
     }
+    //打刻ページ表示
+    public function getBreakin()
+    {
+        return view('index.breakin');
+    }
+    //打刻ページ表示
+    public function getBreakout()
+    {
+        return view('index.breakout');
+    }
+    //打刻ページ表示
+    public function getEnd()
+    {
+        return view('index.end');
+    }
+
+
     //勤務開始処理
     public function startAttendance()
     {
@@ -29,31 +46,32 @@ class AttendanceController extends Controller
 
         $newTimestampDay = Carbon::today();
 
+        //出勤開始を１日の内にもう一度押す、且つend_timeカラムに値が入ってるとエラーを返す
         if (($startTime)&&($startTimeDay == $newTimestampDay) && (empty($startTime->end_time))) {
             return redirect()->back()->with('error', 'すでに出勤打刻がされています！');
         }
 
-        $timestamp = Attendance::create([
+        $startTime = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::today(), //打刻時の日付
             'start_time' => Carbon::now(), //出勤時間
         ]);
 
-        return redirect()->back()->with('stampingMessage', '打刻完了！出勤しました！');
+        return redirect('/breakin')->with('stampingMessage', '打刻完了！出勤しました！');
     }
 
     //勤務終了処理
     public function endAttendance()
     {
         $user = Auth::user();
-        $endTimestamp = Attendance::where('user_id', $user->id)->latest()->first();
+        $endTime = Attendance::where('user_id', $user->id)->latest()->first();
 
-        if (!empty($endTimestamp->end_time)) {
+        if (!empty($endTime->end_time)) {
             return redirect()->back()->with('error', 'すでに退勤打刻がされている、もしくは出勤打刻がされていません！');
         }
 
-        $endTimestamp->update([
-            'end_time' => Carbon::now()
+        $endTime->update([
+            'end_time' => Carbon::now(), //退勤時間
         ]);
 
         return redirect()->back()->with('stampingMessage', '打刻完了！退勤しました！');
@@ -80,7 +98,7 @@ class AttendanceController extends Controller
 
         $work_times = date("H:i:s", $diff);
 
-
+        $attendances= Attendance::paginate(5);
         return view('attendance', compact('attendances', 'work_times'));
     }
 }

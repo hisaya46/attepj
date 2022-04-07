@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Atte|日付一覧</title>
   <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <link rel="stylesheet" href="{{ asset('css/register.css') }}">
   <link rel="stylesheet" href="{{ asset('css/index.css') }}">
   <link rel="stylesheet" href="{{ asset('css/attendance.css') }}">
@@ -46,9 +47,9 @@
             <td class="table-item"></td>
           </tr>
           @endforeach
-
         </tbody>
       </table>
+      {{ $attendances->links('pagination::bootstrap-4') }}
 
     </div>
   </main>
