@@ -47,7 +47,7 @@ class AttendanceController extends Controller
         $newTimestampDay = Carbon::today();
 
         //出勤開始を１日の内にもう一度押す、且つend_timeカラムに値が入ってるとエラーを返す
-        if (($startTime)&&($startTimeDay == $newTimestampDay) && (empty($startTime->end_time))) {
+        if (($startTime) && ($startTimeDay == $newTimestampDay) && (empty($startTime->end_time))) {
             return redirect()->back()->with('error', 'すでに出勤打刻がされています！');
         }
 
@@ -86,19 +86,30 @@ class AttendanceController extends Controller
     {
 
         $attendances = Attendance::all();
+        foreach ($attendances as $attendance) {
+            $attendance->rest_time = Rest::select(DB::raw('SUM(TIMEDIFF(breakout_time,breakin_time)) as rest_time'))
+                ->groupBy('attendance_id')
+                ->get();
+            $attendance->restraint_time = Attendance::select(DB::raw('TIMEDIFF(end_time,start_time) as restraint_time'))
+                ->get();
+            $attendance->work_time = Attendance::select(DB::raw('TIMEDIFF(restraint_time,rest_time)'))
+                ->get();
+        }
+        //dd($attendances);
+        $attendances = Attendance::paginate(5);
+        return view('attendance', compact('attendances'));
 
-        $rest_times = Rest::select(DB::raw('TIMEDIFF(breakout_time,breakin_time) as rest_time'))->get();
+        // $rest_times = Rest::select(DB::raw('TIMEDIFF(breakout_time,breakin_time) as rest_time'))->get();
 
-        $restraint_times = Attendance::select(DB::raw('TIMEDIFF(end_time,start_time) as restraint_time'))->get();
-        //dd($attendances, $rest_times, $restraint_times); //取得できてるか確認
+        // $restraint_times = Attendance::select(DB::raw('TIMEDIFF(end_time,start_time) as restraint_time'))->get()
 
-        $rest_times_c = strtotime($rest_times);
-        $restraint_times_c = strtotime($restraint_times);
-        $diff = $restraint_times_c - $rest_times_c;
+        // $rest_times_c = strtotime($rest_times);
+        // $restraint_times_c = strtotime($restraint_times);
+        // $diff = $restraint_times_c - $rest_times_c;
 
-        $work_times = date("H:i:s", $diff);
+        // $work_times = date("H:i:s", $diff);
 
-        $attendances= Attendance::paginate(5);
-        return view('attendance', compact('attendances', 'work_times'));
+        // $attendances= Attendance::paginate(5);
+        // return view('attendance', compact('attendances', 'work_times'));
     }
 }

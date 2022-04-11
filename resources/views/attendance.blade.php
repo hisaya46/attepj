@@ -43,8 +43,8 @@
             <td class="table-item">{{$attendance->user->name}}</td>
             <td class="table-item">{{$attendance->start_time}}</td>
             <td class="table-item">{{$attendance->end_time}}</td>
-            <td class="table-item"></td>
-            <td class="table-item"></td>
+            <td class="table-item">{{$attendance->rest_time}}</td>
+            <td class="table-item">{{$attendance->work_time}}</td>
           </tr>
           @endforeach
         </tbody>
