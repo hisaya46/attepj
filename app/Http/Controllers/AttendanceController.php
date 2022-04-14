@@ -46,7 +46,7 @@ class AttendanceController extends Controller
 
         $newTimestampDay = Carbon::today();
 
-        //出勤開始を１日の内にもう一度押す、且つend_timeカラムに値が入ってるとエラーを返す
+        //出勤開始を連続で押す、またはend_timeカラムに値が入ってるとエラーを返す
         if (($startTime) && ($startTimeDay == $newTimestampDay) && (empty($startTime->end_time))) {
             return redirect()->back()->with('error', 'すでに出勤打刻がされています！');
         }
@@ -57,7 +57,7 @@ class AttendanceController extends Controller
             'start_time' => Carbon::now(), //出勤時間
         ]);
 
-        return redirect('/breakin')->with('stampingMessage', '打刻完了！出勤しました！');
+        return redirect()->back()->with('stampingMessage', '打刻完了！出勤しました！');
     }
 
     //勤務終了処理
@@ -84,32 +84,24 @@ class AttendanceController extends Controller
     //日付一覧ページ表示
     public function getAttendance()
     {
-
-        $attendances = Attendance::all();
-        foreach ($attendances as $attendance) {
-            $attendance->rest_time = Rest::select(DB::raw('SUM(TIMEDIFF(breakout_time,breakin_time)) as rest_time'))
-                ->groupBy('attendance_id')
-                ->get();
-            $attendance->restraint_time = Attendance::select(DB::raw('TIMEDIFF(end_time,start_time) as restraint_time'))
-                ->get();
-            $attendance->work_time = Attendance::select(DB::raw('TIMEDIFF(restraint_time,rest_time)'))
-                ->get();
-        }
-        //dd($attendances);
         $attendances = Attendance::paginate(5);
+
+        foreach ($attendances as $attendance) {
+            // このループのattendanceのidを持つrestデータを取得
+            $rests = $attendance->rests;
+
+            // 休憩時間の合計秒数を取得
+            $total_rest_time = 0;
+            foreach ($rests as $rest) {
+                $total_rest_time = $total_rest_time + strtotime($rest->breakout_time) - strtotime($rest->breakin_time) - 32400;
+            }
+            // 拘束時間
+            $restraint_time = strtotime($attendance->end_time) - strtotime($attendance->start_time) - (32400 + 32400);
+
+            $attendance->rest_time = date('H:i:s', $total_rest_time);
+            $attendance->work_time = date('H:i:s', $restraint_time - $total_rest_time);
+        }
+
         return view('attendance', compact('attendances'));
-
-        // $rest_times = Rest::select(DB::raw('TIMEDIFF(breakout_time,breakin_time) as rest_time'))->get();
-
-        // $restraint_times = Attendance::select(DB::raw('TIMEDIFF(end_time,start_time) as restraint_time'))->get()
-
-        // $rest_times_c = strtotime($rest_times);
-        // $restraint_times_c = strtotime($restraint_times);
-        // $diff = $restraint_times_c - $rest_times_c;
-
-        // $work_times = date("H:i:s", $diff);
-
-        // $attendances= Attendance::paginate(5);
-        // return view('attendance', compact('attendances', 'work_times'));
     }
 }

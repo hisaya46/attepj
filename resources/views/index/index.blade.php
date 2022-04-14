@@ -45,19 +45,19 @@
                 <form class="attendance-form" action="{{ route('timestamp/end') }}" method="POST">
                     @csrf
                     <div class="attendance-form-items">
-                        <input class="attendance-items-btn" type="submit" value="勤務終了" disabled>
+                        <input class="attendance-items-btn" type="submit" value="勤務終了">
                     </div>
                 </form>
                 <form class="attendance-form" action="{{ route('timestamp/breakin') }}" method="POST">
                     @csrf
                     <div class="attendance-form-items">
-                        <input class="attendance-items-btn" id="breakin" type="submit" value="休憩開始" disabled>
+                        <input class="attendance-items-btn" id="breakin" type="submit" value="休憩開始">
                     </div>
                 </form>
                 <form class="attendance-form" action="{{ route('timestamp/breakout') }}" method="POST">
                     @csrf
                     <div class="attendance-form-items">
-                        <input class="attendance-items-btn" id="breakout" type="submit" value="休憩終了" disabled>
+                        <input class="attendance-items-btn" id="breakout" type="submit" value="休憩終了">
                     </div>
                 </form>
             </div>
