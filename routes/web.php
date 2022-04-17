@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //日付一覧ページ
 Route::get('/attendance', [AttendanceController::class, 'getAttendance'])->middleware(['auth']);
+Route::post('/attendance', [AttendanceController::class, 'changeDate'])->middleware(['auth']);
 
 /*
 |--------------------------------------------------------------------------

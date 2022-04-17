@@ -24,6 +24,23 @@
       </ul>
     </nav>
   </header>
+
+  <div class="change-date">
+    <form action="/attendance" method="POST">
+      @csrf
+      <input type="hidden" id="date" name="date" value="{{ $today }}" class="date">
+      <input type="hidden" id="before" name="before" value="before" class="before-next">
+      <input type="submit" id="arrow" name="arrow" value="<" class="arrow">
+    </form>
+    <p class="change-date-today">{{ $today }}</p>
+    <form action="/attendance" method="POST">
+      @csrf
+      <input type="hidden" id="date" name="date" value="{{ $today }}" class="date">
+      <input type="hidden" id="next" name="next" value="next" class="before-next">
+      <input type="submit" id="arrow" name="arrow" value=">" class="arrow">
+    </form>
+  </div>
+
   <main class="attendance-list-field">
     <div class="attendance-list">
       <table class="table">
@@ -49,8 +66,9 @@
           @endforeach
         </tbody>
       </table>
-      {{ $attendances->links('pagination::bootstrap-4') }}
-
+      <div class="d-flex justify-content-center">
+        {{ $attendances->appends($today)->links('pagination::bootstrap-4') }}
+      </div>
     </div>
   </main>
   <footer class=" footer">
