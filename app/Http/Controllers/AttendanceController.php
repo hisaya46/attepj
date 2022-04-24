@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Rest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
@@ -14,24 +13,45 @@ class AttendanceController extends Controller
     //打刻ページ表示
     public function getIndex()
     {
-        return view('index.index');
-    }
-    //打刻ページ表示
-    public function getBreakin()
-    {
-        return view('index.breakin');
-    }
-    //打刻ページ表示
-    public function getBreakout()
-    {
-        return view('index.breakout');
-    }
-    //打刻ページ表示
-    public function getEnd()
-    {
-        return view('index.end');
-    }
+        //ボタン活性非活性
+        $workStart = false; //勤務開始ボタン
+        $workEnd = false; //勤務終了ボタン
+        $breakIn = false; //休憩開始ボタン
+        $breakOut = false; //休憩終了ボタン
 
+        $user = Auth::user();
+        $today = Carbon::today()->format('Y-m-d');
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
+
+        if ($attendance != null) { // 勤務開始ボタンを押した場合
+            if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
+            } else { // 勤務中の場合
+                $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+                if ($rest != null) { // 休憩開始ボタンを押した場合
+                    if ($rest['breakout_time'] != null) { // 休憩終了ボタンを押した場合
+                        $workEnd = true;
+                        $breakIn = true;
+                    } else { // 休憩中の場合
+                        $breakOut = true;
+                    }
+                } else { // 休憩中ではない場合
+                    $workEnd = true;
+                    $breakIn = true;
+                }
+            }
+        } else { // 当日初めてログインした場合
+            $workStart = true;
+        }
+
+        $btn = [
+            'workStart' => $workStart,
+            'workEnd' => $workEnd,
+            'breakIn' => $breakIn,
+            'breakOut' => $breakOut,
+        ];
+
+        return view('index', ['btn' => $btn]);
+    }
 
     //勤務開始処理
     public function startAttendance()
@@ -57,7 +77,8 @@ class AttendanceController extends Controller
             'start_time' => Carbon::now(), //出勤時間
         ]);
 
-        return redirect('/breakin')->with('stampingMessage', '打刻完了！出勤しました！');
+        return redirect()->back()->with('stampingMessage', '打刻完了！出勤しました！');
+        //return redirect('/breakin')->with('stampingMessage', '打刻完了！出勤しました！');
     }
 
     //勤務終了処理
@@ -74,7 +95,8 @@ class AttendanceController extends Controller
             'end_time' => Carbon::now(), //退勤時間
         ]);
 
-        return redirect('/end')->with('stampingMessage', '打刻完了！退勤しました！');
+        return redirect()->back()->with('stampingMessage', '打刻完了！退勤しました！');
+        //return redirect('/end')->with('stampingMessage', '打刻完了！退勤しました！');
     }
 
     //日付一覧ページ
@@ -99,10 +121,12 @@ class AttendanceController extends Controller
                 }
                 $rest_hour = floor($total_rest_time / 3600); // 時を算出
                 $rest_minute = floor(($total_rest_time / 60) % 60); // 分を算出
+                $rest_minute_c = floor(($rest_minute / 5)) * 5; //分を5分単位で切り下げ
                 $rest_seconds = floor($total_rest_time % 60); //秒を算出
-                //参考サイト[https://qiita.com/Shouin/items/b4d8d74f2ccba333365b]
+
+                //参考サイト:[https://qiita.com/Shouin/items/b4d8d74f2ccba333365b],[https://ichilv.com/php-round/#toc4]
                 // sprintf関数で第一引数に指定したフォーマットで文字列を生成
-                $attendance->rest_time = sprintf('%2d時間%02d分%02d秒', $rest_hour, $rest_minute, $rest_seconds);
+                $attendance->rest_time = sprintf('%2d時間%02d分', $rest_hour, $rest_minute_c, $rest_seconds);
                 // 拘束時間
                 $restraint_time = strtotime($attendance->end_time) - strtotime($attendance->start_time);
                 //拘束時間と合計休憩時間の差
@@ -110,8 +134,9 @@ class AttendanceController extends Controller
                 $total_work_time = $total_work_time + $restraint_time - $total_rest_time;
                 $work_hour = floor($total_work_time / 3600);
                 $work_minute = floor(($total_work_time / 60) % 60);
+                $work_minute_c = floor(($work_minute / 5)) * 5;
                 $work_second = floor($total_work_time % 60);
-                $attendance->work_time = sprintf('%2d時間%02d分%02d秒', $work_hour, $work_minute, $work_second);
+                $attendance->work_time = sprintf('%2d時間%02d分', $work_hour, $work_minute_c, $work_second);
             }
         }
 
@@ -145,9 +170,9 @@ class AttendanceController extends Controller
             }
             $rest_hour = floor($total_rest_time / 3600); // 時を算出
             $rest_minute = floor(($total_rest_time / 60) % 60); // 分を算出
+            $rest_minute_c = floor(($rest_minute / 5)) * 5; //分を5分単位で切り下げ
             $rest_seconds = floor($total_rest_time % 60); //秒を算出
-            // sprintf関数で第一引数に指定したフォーマットで文字列を生成
-            $attendance->rest_time = sprintf('%2d時間%02d分%02d秒', $rest_hour, $rest_minute, $rest_seconds);
+            $attendance->rest_time = sprintf('%2d時間%02d分', $rest_hour, $rest_minute_c, $rest_seconds);
             // 拘束時間
             $restraint_time = strtotime($attendance->end_time) - strtotime($attendance->start_time);
             //拘束時間と合計休憩時間の差
@@ -155,8 +180,9 @@ class AttendanceController extends Controller
             $total_work_time = $total_work_time + $restraint_time - $total_rest_time;
             $work_hour = floor($total_work_time / 3600);
             $work_minute = floor(($total_work_time / 60) % 60);
+            $work_minute_c = floor(($work_minute / 5)) * 5;
             $work_second = floor($total_work_time % 60);
-            $attendance->work_time = sprintf('%2d時間%02d分%02d秒', $work_hour, $work_minute, $work_second);
+            $attendance->work_time = sprintf('%2d時間%02d分', $work_hour, $work_minute_c, $work_second);
         }
 
         return view('attendance')->with([

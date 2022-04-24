@@ -160,7 +160,7 @@ return [
 
     'attributes' => [
         'name' => '名前',
-        'mail_address' => 'メールアドレス',
+        'email' => 'メールアドレス',
         'password' => 'パスワード'
     ],
 

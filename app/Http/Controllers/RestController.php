@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Rest;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +25,8 @@ class RestController extends Controller
             'breakin_time' => Carbon::now(),
         ]);
 
-        return redirect('/breakout')->with('stampingMessage', '打刻完了！休憩を開始しました！');
+        return redirect()->back()->with('stampingMessage', '打刻完了！休憩を開始しました！');
+        //return redirect('/breakout')->with('stampingMessage', '打刻完了！休憩を開始しました！');
     }
 
     public function endRest()
@@ -42,6 +42,8 @@ class RestController extends Controller
         $breakout->update([
             'breakout_time' => Carbon::now()
         ]);
-        return redirect('/breakin')->with('stampingMessage', '打刻完了！休憩を終了しました！');
+
+        return redirect()->back()->with('stampingMessage', '打刻完了！休憩を終了しました！');
+        //return redirect('/breakin')->with('stampingMessage', '打刻完了！休憩を終了しました！');
     }
 }
