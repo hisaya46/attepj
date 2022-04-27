@@ -43,6 +43,33 @@ class AttendanceController extends Controller
             $workStart = true;
         }
 
+        if (isset($attendance) && $attendance['start_time'] != null && $today != date("Y-m-d", strtotime($attendance['start_time'])) && $attendance['end_time'] == null) {
+            //前日勤怠開始ボタンを押したまま退勤ボタンを押さずに日付を跨いだ場合
+            $lastEndTime = $attendance->end_time;
+            $lastDateTime = $attendance->start_time;
+            $lastDate = date("Y-m-d", strtotime(($lastDateTime)));
+            $nextDate = date("Y-m-d", strtotime($lastDateTime . "+1 day"));
+
+            //勤怠開始してから日付を跨いだ場合、勤怠開始時と同日の23:59:59をend_timeに挿入
+            while ($lastEndTime == null && $lastDate != $today) {
+
+                $attendance->update([
+                    'end_time' => Carbon::parse($lastDateTime)->endOfDay()
+                ]);
+
+                $attendance = Attendance::create([
+                    'user_id' => $user->id,
+                    'start_time' => $nextDate . ' 00:00:00',
+                ]);
+
+                $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+                $lastEndTime = $attendance->end_time;
+                $lastDateTime = $attendance->start_time;
+                $lastDate = date("Y-m-d", strtotime(($lastDateTime)));
+                $nextDate = date("Y-m-d", strtotime($lastDateTime . "+1 day"));
+            }
+        }
+
         $btn = [
             'workStart' => $workStart,
             'workEnd' => $workEnd,

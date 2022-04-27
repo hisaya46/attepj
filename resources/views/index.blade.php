@@ -6,7 +6,7 @@
 </header>
 @section('content')
 <div class="attendance">
-    <h2 class="register-field-ttl">{{(Auth::user())->name}}さんお疲れ様です！</h2>
+    <h2 class="register-field-ttl">{{(Auth::user())->name}}さん、お疲れ様です！</h2>
     <div class="attendance-field">
         <form class="attendance-form" action="{{ route('timestamp/start') }}" method="POST">
             @csrf
@@ -28,7 +28,7 @@
         </form>
         <form class="attendance-form" action="{{ route('timestamp/breakout') }}" method="POST">
             @csrf
-            <div class="attendance-form-items">
+            <div class="attendance-form-items attendance-form-items-last ">
                 <input class="attendance-items-btn" id="breakout" type="submit" value="休憩終了" <?php if ($btn['breakOut'] == false) { ?> disabled <?php } ?>>
             </div>
         </form>

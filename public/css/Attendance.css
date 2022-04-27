@@ -41,3 +41,31 @@
     margin-top: 6px;
 }
 
+/* タブレット */
+@media screen and (max-width: 768px) {
+.attendance-list {
+    overflow-x: scroll;
+    width: 75%;
+}
+.table {
+    min-width: 650px;
+}
+.table-head-ttl,
+.table-item {
+    font-size: 1.2em;
+}
+}
+
+/* スマートフォン */
+@media screen and (max-width: 480px) {
+.attendance-list {
+    overflow-x: scroll;
+}
+.table {
+    white-space: nowrap;
+}
+.table-head-ttl,
+.table-item {
+    font-size: 1em;
+}
+}

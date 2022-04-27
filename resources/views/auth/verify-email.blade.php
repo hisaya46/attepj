@@ -1,39 +1,62 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('layout')
+@section('title','Atte|Thanks')
+<header class="header">
+    <h1 class="logo">Atte</h1>
+</header>
+@section('content')
+<div class="thanks-message">
+    <div class="">
+        <p>会員登録ありがとうございます！<br><br>本人確認のため、ご入力いただいたメールアドレス宛に、確認用リンクを送信しましたのでご確認ください！<br><br>
+            ※メールが届かない場合は、入力したアドレスに間違いがあるか、あるいは迷惑メールフォルダに入っている可能性がありますのでご確認ください。<br><br>確認用メールを再送する場合は再送信ボタンをクリックしてください。</p>
+    </div>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-        </div>
+    @if (session('status') == 'verification-link-sent')
+    <div class="">
+        登録時に入力いただいたメールアドレスに新しい確認用リンクが送信されました。
+    </div>
+    @endif
 
-        @if (session('status') == 'verification-link-sent')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-            </div>
-        @endif
-
-        <div class="mt-4 flex items-center justify-between">
-            <form method="POST" action="{{ route('verification.send') }}">
-                @csrf
-
-                <div>
-                    <x-button>
-                        {{ __('Resend Verification Email') }}
-                    </x-button>
-                </div>
-            </form>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-
-                <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    {{ __('Log Out') }}
+    <div class="">
+        <form method="POST" action="{{ route('verification.send') }}">
+            @csrf
+            <div class="btn-wrap">
+                <button class="re-btn">
+                    {{ __('再送信') }}
                 </button>
-            </form>
+            </div>
+        </form>
+        <div class="back">
+            <div class="register-field-login">
+                <p class="register-field-login-message">会員登録画面へ戻る場合は</p>
+                <a href="/register" class="register-field-login-btn">こちら</a>
+            </div>
         </div>
-    </x-auth-card>
-</x-guest-layout>
+    </div>
+</div>
+@endsection
+<style>
+    .thanks-message {
+        width: 50%;
+        margin: 50px auto;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .btn-wrap {
+        width: 100%;
+    }
+
+    .re-btn {
+        display: block;
+        background-color: beige;
+        color: #2525e0;
+        border: 1px solid #2525e0;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0 auto;
+    }
+
+    .back {
+        margin-top: 50px;
+    }
+</style>

@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RestController;
 
+
+
 //打刻ページ
 Route::group(['middleware' => 'auth'], function () {
     //ログイン後
-    Route::get('/', [AttendanceController::class, 'getIndex']);
+    Route::get('/', [AttendanceController::class, 'getIndex'])->middleware(['verified']);
     //勤務開始
     Route::post('/attendance/start', [AttendanceController::class, 'startAttendance'])->name('timestamp/start');
     //勤務終了
