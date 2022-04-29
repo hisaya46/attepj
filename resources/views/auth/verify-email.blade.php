@@ -28,7 +28,12 @@
         <div class="back">
             <div class="register-field-login">
                 <p class="register-field-login-message">会員登録画面へ戻る場合は</p>
-                <a href="/register" class="register-field-login-btn">こちら</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-dropdown-link :href="route('register')" class="register-field-login-btn" onclick="event.preventDefault();this.closest('form').submit();">
+                        {{ __('こちら') }}
+                    </x-dropdown-link>
+                </form>
             </div>
         </div>
     </div>

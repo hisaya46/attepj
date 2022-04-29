@@ -21,7 +21,27 @@ class AttendanceController extends Controller
 
         $user = Auth::user();
         $today = Carbon::today()->format('Y-m-d');
+        $now = Carbon::now()->format('Y-m-d');
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
+        $past = Attendance::where('user_id', $user->id)->where('date','<', $today)->first();
+        $endTime = Attendance::where('user_id', $user->id)->latest()->first();
+        $startTime = Attendance::where('user_id', $user->id)->latest()->first();
+
+        // 出勤したまま日を跨いだ場合、end_timeを'23:59:59'に更新
+        if ($past->start_time != null && $past->end_time == null && $past->date != $now) {
+            $endTime->update([
+                'end_time' => '23:59:59',
+            ]);
+        }
+        // end_timeに'23:59:59'が入ったら、出勤中を継続するため日を跨いだ当日の'start_time'に'00:00:00'を格納する
+        // 日を跨いだ時にattendancesテーブルにデータが存在すると処理は実行しない = '00:00:00'を格納する処理は一度だけ行う
+        if (($startTime) && $past->end_time == '23:59:59' && empty($attendance)){
+            $startTime = Attendance::create([
+                'user_id' => $user->id,
+                'date' => Carbon::today(),
+                'start_time' => '00:00:00',
+            ]);
+        }
 
         if ($attendance != null) { // 勤務開始ボタンを押した場合
             if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
@@ -41,33 +61,6 @@ class AttendanceController extends Controller
             }
         } else { // 当日初めてログインした場合
             $workStart = true;
-        }
-
-        if (isset($attendance) && $attendance['start_time'] != null && $today != date("Y-m-d", strtotime($attendance['start_time'])) && $attendance['end_time'] == null) {
-            //前日勤怠開始ボタンを押したまま退勤ボタンを押さずに日付を跨いだ場合
-            $lastEndTime = $attendance->end_time;
-            $lastDateTime = $attendance->start_time;
-            $lastDate = date("Y-m-d", strtotime(($lastDateTime)));
-            $nextDate = date("Y-m-d", strtotime($lastDateTime . "+1 day"));
-
-            //勤怠開始してから日付を跨いだ場合、勤怠開始時と同日の23:59:59をend_timeに挿入
-            while ($lastEndTime == null && $lastDate != $today) {
-
-                $attendance->update([
-                    'end_time' => Carbon::parse($lastDateTime)->endOfDay()
-                ]);
-
-                $attendance = Attendance::create([
-                    'user_id' => $user->id,
-                    'start_time' => $nextDate . ' 00:00:00',
-                ]);
-
-                $attendance = Attendance::where('user_id', $user->id)->latest()->first();
-                $lastEndTime = $attendance->end_time;
-                $lastDateTime = $attendance->start_time;
-                $lastDate = date("Y-m-d", strtotime(($lastDateTime)));
-                $nextDate = date("Y-m-d", strtotime($lastDateTime . "+1 day"));
-            }
         }
 
         $btn = [

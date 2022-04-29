@@ -28,10 +28,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Attendance');
     }
 
-
-
-
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,4 +46,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    // sendEmailVerificationNotification()は新規登録時に送信されるメールに関するメソッド
+    // 「これからはカスタマイズした通知を使用する」という意味の記述
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\CustomVerifyEmail());
+    }
 }
