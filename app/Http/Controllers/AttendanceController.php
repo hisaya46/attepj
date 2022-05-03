@@ -21,28 +21,27 @@ class AttendanceController extends Controller
 
         $user = Auth::user();
         $today = Carbon::today()->format('Y-m-d');
-        $now = Carbon::now()->format('Y-m-d');
+        $now = Carbon::now()->format('Y-m-d'); //dateの比較に使用
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
-        $past = Attendance::where('user_id', $user->id)->where('date','<', $today)->first();
-        $endTime = Attendance::where('user_id', $user->id)->latest()->first();
-        $startTime = Attendance::where('user_id', $user->id)->latest()->first();
+        $past = Attendance::where('user_id', $user->id)->where('date','<', $today)->latest()->first(); //過去のdateで最新のものを取得
+        $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
         // 出勤したまま日を跨いだ場合、end_timeを'23:59:59'に更新
         if ($past->start_time != null && $past->end_time == null && $past->date != $now) {
-            $endTime->update([
+            $straddle->update([
                 'end_time' => '23:59:59',
             ]);
+            return redirect()->back()->with('stampingMessage', '23:59:59で一旦退勤処理');
         }
         // end_timeに'23:59:59'が入ったら、出勤中を継続するため日を跨いだ当日の'start_time'に'00:00:00'を格納する
         // 日を跨いだ時にattendancesテーブルにデータが存在すると処理は実行しない = '00:00:00'を格納する処理は一度だけ行う
-        if (($startTime) && $past->end_time == '23:59:59' && empty($attendance)){
-            $startTime = Attendance::create([
+        if (($straddle) && $past->end_time == '23:59:59' && empty($attendance)){
+            $straddle = Attendance::create([
                 'user_id' => $user->id,
                 'date' => Carbon::today(),
                 'start_time' => '00:00:00',
             ]);
         }
-
         if ($attendance != null) { // 勤務開始ボタンを押した場合
             if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
             } else { // 勤務中の場合
