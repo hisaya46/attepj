@@ -23,12 +23,11 @@ class AttendanceController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now()->format('Y-m-d'); //dateの比較に使用
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
-        $past = Attendance::where('user_id', $user->id)->where('date','<', $today)->latest()->first(); //過去のdateで最新のものを取得
+        $past = Attendance::all()->where('user_id', $user->id)->where('date','<', $today)->latest()->first(); //過去のdateで最新のものを取得
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
         // 出勤したまま日を跨いだ場合、end_timeを'23:59:59'に更新
-        // if ($past->start_time != null && $past->end_time == null && $past->date != $now)
-        if ($past->end_time == null && $past->date != $now) {
+        if ($past->start_time != null && $past->end_time == null && $past->date != $now) {
             $straddle->update([
                 'end_time' => '23:59:59',
             ]);
