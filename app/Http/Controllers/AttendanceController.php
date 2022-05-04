@@ -27,7 +27,8 @@ class AttendanceController extends Controller
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
         // 出勤したまま日を跨いだ場合、end_timeを'23:59:59'に更新
-        if ($past->start_time != null && $past->end_time == null && $past->date != $now) {
+        // if ($past->start_time != null && $past->end_time == null && $past->date != $now)
+        if ($past->end_time == null && $past->date != $now) {
             $straddle->update([
                 'end_time' => '23:59:59',
             ]);
