@@ -18,14 +18,13 @@ http://127.0.0.1:8000/login
 
 人事評価及び従業員の勤怠管理を目的としています。
 
-# 開発環境
+# 動作環境
 
 * HTML/CSS
 * Javascript
 * PHP 7.4.21
 * Laravel 8.83.6
 * Laravel Breeze
-* MAMP
 * MySql 5.7.34
 
 当アプリはOSはMac、エディターがVisual Studio Codeで開発しました。
