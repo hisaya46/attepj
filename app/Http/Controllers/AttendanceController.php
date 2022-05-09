@@ -26,6 +26,9 @@ class AttendanceController extends Controller
         $past = Attendance::where('user_id', $user->id)->where('date', '<', $today)->latest()->first(); //過去のdateで最新のものを取得
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
+        if ($past == null) {
+            return view('index');
+        }
         // 休憩したまま日を跨いだ場合、breakout_timeを'23:59:59'に更新
         $pastRest = Rest::where('created_at', '<', $today)->whereNull('breakout_time')->first();
         if (($pastRest) && $pastRest->created_at != $now) {
@@ -40,8 +43,6 @@ class AttendanceController extends Controller
                 'end_time' => '23:59:59',
             ]);
             return redirect()->back()->with('stampingMessage', '23:59:59で一旦退勤処理');
-        } elseif ($past == null) {
-            return view('index');
         }
         // end_timeに'23:59:59'が入ったら、出勤中を継続するため日を跨いだ当日の'start_time'に'00:00:00'を格納する
         // 日を跨いだ時にattendancesテーブルにデータが存在すると処理は実行しない = '00:00:00'を格納する処理は一度だけ行う
