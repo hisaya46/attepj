@@ -20,28 +20,41 @@ class AttendanceController extends Controller
         $breakOut = false; //休憩終了ボタン
 
         $user = Auth::user();
+        $attendance_id = Attendance::find($user->id)->latest()->first();
         $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now()->format('Y-m-d'); //dateの比較に使用
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
-        $past = Attendance::where('user_id', $user->id)->where('date','<', $today)->latest()->first(); //過去のdateで最新のものを取得
+        $past = Attendance::where('user_id', $user->id)->where('date', '<', $today)->latest()->first(); //過去のdateで最新のものを取得
+        $restUpdate = Rest::where('created_at', '<', $today)->where('breakout_time', '23:59:59')->first();
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
+        // 休憩したまま日を跨いだ場合、breakout_timeを'23:59:59'に更新
+        $pastRest = Rest::where('created_at', '<', $today)->whereNull('breakout_time')->first();
+        if (($pastRest) && $pastRest->created_at != $now) {
+            $pastRest->update([
+                'breakout_time' => '23:59:59',
+            ]);
+            return redirect()->back()->with('stampingMessage', '23:59:59で一旦休憩終了');
+        }
         // 出勤したまま日を跨いだ場合、end_timeを'23:59:59'に更新
         if ($past->start_time != null && $past->end_time == null && $past->date != $now) {
             $straddle->update([
                 'end_time' => '23:59:59',
             ]);
             return redirect()->back()->with('stampingMessage', '23:59:59で一旦退勤処理');
+        } elseif ($past == null) {
+            return view('index');
         }
         // end_timeに'23:59:59'が入ったら、出勤中を継続するため日を跨いだ当日の'start_time'に'00:00:00'を格納する
         // 日を跨いだ時にattendancesテーブルにデータが存在すると処理は実行しない = '00:00:00'を格納する処理は一度だけ行う
-        if (($straddle) && $past->end_time == '23:59:59' && empty($attendance)){
+        if (($straddle) && $past->end_time == '23:59:59' && empty($attendance)) {
             $straddle = Attendance::create([
                 'user_id' => $user->id,
                 'date' => Carbon::today(),
                 'start_time' => '00:00:00',
             ]);
         }
+
         if ($attendance != null) { // 勤務開始ボタンを押した場合
             if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
             } else { // 勤務中の場合
