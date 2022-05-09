@@ -20,12 +20,10 @@ class AttendanceController extends Controller
         $breakOut = false; //休憩終了ボタン
 
         $user = Auth::user();
-        $attendance_id = Attendance::find($user->id)->latest()->first();
         $today = Carbon::today()->format('Y-m-d');
         $now = Carbon::now()->format('Y-m-d'); //dateの比較に使用
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
         $past = Attendance::where('user_id', $user->id)->where('date', '<', $today)->latest()->first(); //過去のdateで最新のものを取得
-        $restUpdate = Rest::where('created_at', '<', $today)->where('breakout_time', '23:59:59')->first();
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
         // 休憩したまま日を跨いだ場合、breakout_timeを'23:59:59'に更新
