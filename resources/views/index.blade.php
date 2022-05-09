@@ -8,6 +8,10 @@
 <div class="attendance">
     <h2 class="register-field-ttl">{{(Auth::user())->name}}さん、お疲れ様です！</h2>
     <div class="attendance-field">
+        @if(isset($btn))
+        @else
+        <p>メッセージは存在しません。</p>
+        @endif
         <form class="attendance-form" action="{{ route('timestamp/start') }}" method="POST">
             @csrf
             <div class="attendance-form-items">
