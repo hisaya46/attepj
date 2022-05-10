@@ -11,7 +11,7 @@
         <form class="attendance-form" action="{{ route('timestamp/start') }}" method="POST">
             @csrf
             <div class="attendance-form-items">
-                <input class="attendance-items-btn" id="workstart" type="submit" value="勤務開始" <?php if ($btn['workStart'] = false) { ?> disabled <?php }else{ ?>>
+                <input class="attendance-items-btn" id="workstart" type="submit" value="勤務開始" <?php if ($btn['workStart'] = false) { ?> disabled <?php } ?>>
             </div>
         </form>
         <form class="attendance-form" action="{{ route('timestamp/end') }}" method="POST">
