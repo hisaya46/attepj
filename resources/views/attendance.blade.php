@@ -4,6 +4,8 @@
   <h1 class="logo">Atte</h1>
   @include('nav')
 </header>
+
+@section('content')
 <div class="change-date">
   <form action="/attendance" method="POST">
     @csrf
@@ -19,8 +21,6 @@
     <input type="submit" id="arrow" name="arrow" value=">" class="arrow">
   </form>
 </div>
-
-@section('content')
 <div class="attendance-list">
   <table class="table">
     <thead class="table-head">
