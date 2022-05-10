@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <link rel="stylesheet" href="{{ asset('css/register.css') }}">
   <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/attendance.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/stamping.css') }}">
 </head>
 
 <body>
