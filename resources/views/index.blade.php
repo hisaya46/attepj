@@ -11,25 +11,25 @@
         <form class="attendance-form" action="{{ route('timestamp/start') }}" method="POST">
             @csrf
             <div class="attendance-form-items">
-                <input class="attendance-items-btn" id="workstart" type="submit" value="勤務開始" <?php if ($btn['workStart'] = false) { ?> disabled <?php } ?>>
+                <input class="attendance-items-btn" id="workstart" type="submit" value="勤務開始" <?php if ($btn['workStart'] == false) { ?> disabled <?php } ?>>
             </div>
         </form>
         <form class="attendance-form" action="{{ route('timestamp/end') }}" method="POST">
             @csrf
             <div class="attendance-form-items">
-                <input class="attendance-items-btn" id="workend" type="submit" value="勤務終了" <?php if ($btn['workEnd'] = false) { ?> disabled <?php } ?>>
+                <input class="attendance-items-btn" id="workend" type="submit" value="勤務終了" <?php if ($btn['workEnd'] == false) { ?> disabled <?php } ?>>
             </div>
         </form>
         <form class="attendance-form" action="{{ route('timestamp/breakin') }}" method="POST">
             @csrf
             <div class="attendance-form-items">
-                <input class="attendance-items-btn" id="breakin" type="submit" value="休憩開始" <?php if ($btn['breakIn'] = false) { ?> disabled <?php } ?>>
+                <input class="attendance-items-btn" id="breakin" type="submit" value="休憩開始" <?php if ($btn['breakIn'] == false) { ?> disabled <?php } ?>>
             </div>
         </form>
         <form class="attendance-form" action="{{ route('timestamp/breakout') }}" method="POST">
             @csrf
             <div class="attendance-form-items attendance-form-items-last ">
-                <input class="attendance-items-btn" id="breakout" type="submit" value="休憩終了" <?php if ($btn['breakOut'] = false) { ?> disabled <?php } ?>>
+                <input class="attendance-items-btn" id="breakout" type="submit" value="休憩終了" <?php if ($btn['breakOut'] == false) { ?> disabled <?php } ?>>
             </div>
         </form>
     </div>
