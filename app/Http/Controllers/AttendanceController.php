@@ -81,7 +81,7 @@ class AttendanceController extends Controller
             'breakOut' => $breakOut,
         ];
 
-        return view('index', ['btn' => $btn]);
+        return view('index', compact('btn'));
     }
 
     //勤務開始処理
