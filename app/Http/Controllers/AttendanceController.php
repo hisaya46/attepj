@@ -70,6 +70,10 @@ class AttendanceController extends Controller
                     $breakIn = true;
                 }
             }
+        } elseif ($attendance == null) {
+            $workEnd = true;
+            $breakIn = true;
+            $breakOut = true;
         } else { // 当日初めてログインした場合
             $workStart = true;
         }
@@ -81,7 +85,7 @@ class AttendanceController extends Controller
             'breakOut' => $breakOut,
         ];
 
-        return view('index', compact('btn'));
+        return view('index', ['btn' => $btn]);
     }
 
     //勤務開始処理
@@ -109,7 +113,6 @@ class AttendanceController extends Controller
         ]);
 
         return redirect()->back()->with('stampingMessage', '打刻完了！出勤しました！');
-        //return redirect('/breakin')->with('stampingMessage', '打刻完了！出勤しました！');
     }
 
     //勤務終了処理
@@ -127,7 +130,6 @@ class AttendanceController extends Controller
         ]);
 
         return redirect()->back()->with('stampingMessage', '打刻完了！退勤しました！');
-        //return redirect('/end')->with('stampingMessage', '打刻完了！退勤しました！');
     }
 
     //日付一覧ページ
