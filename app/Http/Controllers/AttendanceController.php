@@ -70,10 +70,6 @@ class AttendanceController extends Controller
                     $breakIn = true;
                 }
             }
-        } elseif ($attendance == null) {
-            $workEnd = true;
-            $breakIn = true;
-            $breakOut = true;
         } else { // 当日初めてログインした場合
             $workStart = true;
         }

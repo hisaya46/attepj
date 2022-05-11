@@ -8,9 +8,11 @@
   <title>@yield('title')</title>
   <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/register.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/stamping.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/atte/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/atte/register.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/atte/index.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/atte/stamping.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/atte/user.css') }}">
 </head>
 
 <body>
@@ -21,6 +23,7 @@
   <footer class="footer">
     @include('footer')
   </footer>
+  <script src="{{ asset('js/toggle.js') }}"></script>
 </body>
 
 </html>

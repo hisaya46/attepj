@@ -1,24 +1,30 @@
 .attendance-list-field {
     width: 100%;
 }
+
 .attendance-list {
     width: 85%;
     margin: 30px auto 20px;
 }
+
 .table {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
 }
+
 .table-row {
     border-top: solid 1px #8b8b8b;
 }
+
 .table-head-ttl,
 .table-item {
     text-align: center;
     width: 20%;
     padding: 20px 0;
+    font-size: clamp(15px, 1vw, 20px);
 }
+
 .change-date {
     display: flex;
     justify-content: center;
@@ -47,12 +53,9 @@
     overflow-x: scroll;
     width: 75%;
 }
+
 .table {
     min-width: 650px;
-}
-.table-head-ttl,
-.table-item {
-    font-size: 1.2em;
 }
 }
 
@@ -61,11 +64,8 @@
 .attendance-list {
     overflow-x: scroll;
 }
+
 .table {
     white-space: nowrap;
-}
-.table-head-ttl,
-.table-item {
-    font-size: 1em;
 }
 }

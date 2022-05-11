@@ -21,5 +21,4 @@
         <a href="/login" class="register-field-login-btn">ログイン</a>
     </div>
 </div>
-<script src="{{ asset('js/register.js') }}"></script>
 @endsection

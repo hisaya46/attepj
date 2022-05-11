@@ -1,0 +1,53 @@
+/* user-list */
+.user-list-wrap {
+  width: 85%;
+  margin: 3em auto;
+}
+
+.user-lists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0;
+}
+
+.user-list {
+  width: calc((100% / 5 - 5px) * 5 / 5);
+  list-style-type: none;
+  padding: 0;
+}
+
+.user-list-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #2525e0;
+  background-color: #fff;
+  color: #333;
+  opacity: 1;
+  text-decoration: none;
+  font-size: clamp(12px, 1vw, 20px);
+}
+
+.user-list-btn:hover {
+  opacity: 0.7;
+}
+/* タブレット */
+@media screen and (max-width: 768px) {
+  .user-list {
+    width: calc((100% / 3 - 5px) * 3 / 3);
+  }
+}
+
+/* スマートフォン */
+@media screen and (max-width: 480px) {
+  .user-list {
+    width: calc((100% / 2 - 5px) * 2 / 2);
+  }
+}
+
+/* one-user-attendance */
+.user-records {
+  margin-top: 3em;
+}

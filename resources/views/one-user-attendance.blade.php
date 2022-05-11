@@ -50,8 +50,3 @@
   </div>
 </div>
 @endsection
-<style>
-  .user-records {
-    margin-top: 3em;
-  }
-</style>
