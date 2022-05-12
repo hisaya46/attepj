@@ -32,7 +32,7 @@ class UserListController extends Controller
         $dt = Carbon::today();
         $year = $dt->year;
         $month = $dt->month;
-        $attendances = Attendance::where('user_id', $id)->whereYear('date', $year)->whereMonth('date', $month)->get();
+        $attendances = Attendance::where('user_id', $id)->where('end_time', '!=', '00:00:00')->whereYear('date', $year)->whereMonth('date', $month)->get();
 
         foreach ($attendances as $attendance) {
             foreach ($attendances as $attendance) {
@@ -83,7 +83,7 @@ class UserListController extends Controller
             $dt = new Carbon($date);
             $year = $dt->year;
             $month = $dt->month;
-            $attendances = Attendance::where('user_id', $id)->whereYear('date', $year)->whereMonth('date', $month)->get();
+            $attendances = Attendance::where('user_id', $id)->where('end_time', '!=', '00:00:00')->whereYear('date', $year)->whereMonth('date', $month)->get();
         }
         // 一日後（'>'ボタン）
         if ($request->input('next') == 'next') {
@@ -91,7 +91,7 @@ class UserListController extends Controller
             $dt = new Carbon($date);
             $year = $dt->year;
             $month = $dt->month;
-            $attendances = Attendance::where('user_id', $id)->whereYear('date', $year)->whereMonth('date', $month)->get();
+            $attendances = Attendance::where('user_id', $id)->where('end_time', '!=', '00:00:00')->whereYear('date', $year)->whereMonth('date', $month)->get();
         }
 
         foreach ($attendances as $attendance) {

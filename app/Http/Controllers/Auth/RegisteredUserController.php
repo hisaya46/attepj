@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Attendance;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -36,7 +38,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:191'],
             'email' => ['required', 'string', 'email', 'max:191', 'unique:users'],
-            'password' => ['required', 'confirmed','min:8','max:191', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', 'min:8', 'max:191', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
@@ -45,7 +47,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'date' => Carbon::yesterday(),
+            'start_time' => '00:00:00',
+            'end_time' => '00:00:00',
+        ]);
+
+        event(new Registered($user, $attendance));
 
         Auth::login($user);
 

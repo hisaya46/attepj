@@ -26,9 +26,6 @@ class AttendanceController extends Controller
         $past = Attendance::where('user_id', $user->id)->where('date', '<', $today)->latest()->first(); //過去のdateで最新のものを取得
         $straddle = Attendance::where('user_id', $user->id)->latest()->first(); //日跨ぎ時の時刻の更新に使用
 
-        if ($past == null) {
-            return view('index');
-        }
         // 休憩したまま日を跨いだ場合、breakout_timeを'23:59:59'に更新
         $pastRest = Rest::where('created_at', '<', $today)->whereNull('breakout_time')->first();
         if (($pastRest) && $pastRest->created_at != $now) {
@@ -180,12 +177,12 @@ class AttendanceController extends Controller
         // 一日前（'<'ボタン）
         if ($request->input('before') == 'before') {
             $date = date('Y-m-d', strtotime('-1day', strtotime($request->input('date'))));
-            $attendances = Attendance::whereDate('date', $date)->orderBy('user_id', 'asc')->paginate(5);
+            $attendances = Attendance::whereDate('date', $date)->where('end_time', '!=', '00:00:00')->orderBy('user_id', 'asc')->paginate(5);
         }
         // 一日後（'>'ボタン）
         if ($request->input('next') == 'next') {
             $date = date('Y-m-d', strtotime('+1day', strtotime($request->input('date'))));
-            $attendances = Attendance::whereDate('date', $date)->orderBy('user_id', 'asc')->paginate(5);
+            $attendances = Attendance::whereDate('date', $date)->where('end_time', '!=', '00:00:00')->orderBy('user_id', 'asc')->paginate(5);
         }
         $attendances->appends(compact('date')); //日付を渡す
 
