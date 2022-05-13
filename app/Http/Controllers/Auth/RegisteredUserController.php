@@ -47,6 +47,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // 会員登録時にattendancesテーブルにデータを格納
+        // データベースにデータが全く存在しない時にエラーになるのを回避する為
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'date' => Carbon::yesterday(),

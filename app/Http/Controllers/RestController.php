@@ -26,7 +26,6 @@ class RestController extends Controller
         ]);
 
         return redirect()->back()->with('stampingMessage', '打刻完了！休憩を開始しました！');
-        //return redirect('/breakout')->with('stampingMessage', '打刻完了！休憩を開始しました！');
     }
 
     public function endRest()
@@ -44,6 +43,5 @@ class RestController extends Controller
         ]);
 
         return redirect()->back()->with('stampingMessage', '打刻完了！休憩を終了しました！');
-        //return redirect('/breakin')->with('stampingMessage', '打刻完了！休憩を終了しました！');
     }
 }
