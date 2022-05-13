@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title','Atte|日付一覧')
+@section('title','Atte|従業員別勤怠表')
 <header class="header">
   <h1 class="logo">Atte</h1>
   @include('nav')
